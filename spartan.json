@@ -1,0 +1,351 @@
+{
+	"info": {
+		"_postman_id": "e5310f3f-7ee9-42be-841b-838de9fc31d7",
+		"name": "Spartan",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13495735"
+	},
+	"item": [
+		{
+			"name": "GET /spartans",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"/*",
+							"pm--> It is POSTMAN OBJECT ",
+							"POSTMAN use chai assertion library ",
+							"Link --> https://www.chaijs.com/api/bdd/",
+							"*/",
+							"",
+							"",
+							"// verify date header is exist ",
+							"// RESPONSE HEADERS CONTENT TYPE HEADER CHECK ",
+							"pm.test(\"Date header is exist\", function () {",
+							"    pm.response.to.have.header(\"Date\");",
+							"});",
+							"",
+							"// verfiy Connection header is exist ",
+							"pm.test(\"Connection header is exist\", function () {",
+							"    pm.response.to.have.header(\"Connection\");",
+							"});",
+							"",
+							"//verfiy content type is application/json ",
+							"//there is no ready snipet for checking value itself",
+							"pm.test(\"Content-Type header is application/json\", function () {",
+							"    pm.response.to.be.header(\"Content-Type\",\"application/json\");",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{spartanUrl}}/api/spartans",
+					"host": [
+						"{{spartanUrl}}"
+					],
+					"path": [
+						"api",
+						"spartans"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST /spartans",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//verfiy status code is 201 ",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"",
+							"/*",
+							"HOW TO VERIFY RESPONSE BODY ? ",
+							"var is a variable in JS and it is eligible to put all kind data that we are getting as response",
+							"pm.response.json() --> it will get response as json and store in jsonData OBJECT ",
+							"*/",
+							"var jsonData = pm.response.json();",
+							"",
+							"console.log(\"Learning POSTMAN Automation\");",
+							"console.log(jsonData);",
+							"console.log(\"Success message \"+jsonData.success);",
+							"console.log(\"ID is \"+jsonData.data.id);",
+							"",
+							"",
+							"// verify success message is  A Spartan is Born!",
+							"pm.test(\"Success message is A Spartan is Born!\", function () {",
+							"   // var jsonData = pm.response.json(); --> since we get response previously we dont need it ",
+							"    pm.expect(jsonData.success).to.eql(\"A Spartan is Born!\");",
+							"});",
+							"",
+							"//verify gender is Male",
+							"pm.test(\"Verify gender is Male\", function () {",
+							"    pm.expect(jsonData.data.gender).to.eql(\"Male\");",
+							"});",
+							"",
+							"",
+							"console.log(\"ID is \"+jsonData.data.id);",
+							"pm.collectionVariables.set(\"spartanID\", jsonData.data.id);",
+							"",
+							"",
+							"//verfiy name is same with posted spartan name ",
+							"console.log(jsonData.data.name);",
+							"",
+							"var expectedName=pm.collectionVariables.get(\"spartanName\");",
+							"",
+							"",
+							"pm.test(\"Names needs to be same with \"+expectedName, function () {",
+							" ",
+							"    pm.expect(jsonData.data.name).to.eql(expectedName);",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"",
+							"// we use replace in method to call postman dynmamic variables ",
+							"var name=pm.variables.replaceIn(\"{{$randomFirstName}}\");",
+							"",
+							"// Store generate random name into collection variable called as spartanName ",
+							"// to use while we are sending body and doing assertion against response name",
+							"pm.collectionVariables.set(\"spartanName\", name);",
+							"",
+							"console.log(name);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{spartanName}}\",\n    \"gender\": \"Male\",\n    \"phone\": 7777777777\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{spartanUrl}}/api/spartans",
+					"host": [
+						"{{spartanUrl}}"
+					],
+					"path": [
+						"api",
+						"spartans"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT /spartans/{id}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Superman\",\n    \"gender\": \"Male\",\n    \"phone\": 7777777777\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{spartanUrl}}/api/spartans/:id",
+					"host": [
+						"{{spartanUrl}}"
+					],
+					"path": [
+						"api",
+						"spartans",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{spartanID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE /spartans/{id}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{spartanUrl}}/api/spartans/:id",
+					"host": [
+						"{{spartanUrl}}"
+					],
+					"path": [
+						"api",
+						"spartans",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{spartanID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /spartans/{id}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							" var jsonData = pm.response.json();",
+							"",
+							"// verfiy error message is not found ",
+							"pm.test(\"Verify error message is Not Found\", function () {",
+							"    pm.expect(jsonData.error).to.eql(\"Not Found\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{spartanUrl}}/api/spartans/:id",
+					"host": [
+						"{{spartanUrl}}"
+					],
+					"path": [
+						"api",
+						"spartans",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{spartanID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "spartanUrl",
+			"value": "http://44.212.37.188:8000"
+		},
+		{
+			"key": "spartanID",
+			"value": ""
+		},
+		{
+			"key": "spartanName",
+			"value": ""
+		}
+	]
+}

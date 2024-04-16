@@ -1,0 +1,261 @@
+{
+	"info": {
+		"_postman_id": "9f3df027-dfc6-497c-8973-d053595f9cce",
+		"name": "SerilizationFlow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST /categories",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "807404fb-b764-486d-b2a8-9f5b4f97cbba",
+						"exec": [
+							"let cName=pm.variables.replaceIn(\"{{$randomFirstName}}\");",
+							"console.log(cName);",
+							"",
+							"pm.collectionVariables.set(\"categoryName\", cName);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "8d5d57f6-f30d-4af0-a7e0-0ee678f19905",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Id field is not null\", function () {",
+							"    pm.expect(pm.response.json().id).to.not.be.null;",
+							"});",
+							"",
+							"",
+							"",
+							"// Store the id field in a collection variable",
+							"var responseData = pm.response.json();",
+							"pm.collectionVariables.set(\"categoryId\", responseData.id);",
+							"",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "d7a0b0c9-9e9e-41e8-a913-6dd8b71b162f",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\":\"{{categoryName}}\",\n\"image\":\"{{$randomImageUrl}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseURL}}/categories"
+			},
+			"response": []
+		},
+		{
+			"name": "GET /categories/{id}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "46785e22-7c28-4dd8-af03-a94af35f7c38",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Retrieve the saved \"categoryName\" value from the collection variables",
+							"pm.test(\"Get response name and verify against collection variable 'categoryName'\", function () {",
+							"    var savedCategoryName = pm.collectionVariables.get(\"categoryName\");",
+							"    var responseBody = pm.response.json();",
+							"    var responseName = responseBody.name;",
+							"",
+							"    pm.expect(responseName).to.equal(savedCategoryName);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "4109163c-1493-495b-a096-616fcdb10f88",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/categories/:id",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"categories",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{categoryId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE /categories/{id}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "45d2f7f9-d6da-4758-b567-bda20fd518ca",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response body is true\", function () {",
+							"    pm.expect(pm.response.text()).to.equal('true');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "6a137bcf-c22e-4431-b3c5-909cb0955ffb",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/categories/:id",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"categories",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{categoryId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /categories/{id}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b79ee7e1-2339-48b0-9be6-68cfaf6df95f",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "46e14a67-34fd-43ff-8039-48376a8e4486",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/categories/:id",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"categories",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{categoryId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "db6708d5-a32a-4c7e-bbff-3d6df3987e00",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"console.log(\"---- COLLECTION PRE REQUEST is WORKING -----\")"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "01048237-e078-48af-803c-6efcd6802462",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "https://api.escuelajs.co/api/v1"
+		},
+		{
+			"key": "categoryId",
+			"value": ""
+		},
+		{
+			"key": "categoryName",
+			"value": ""
+		}
+	]
+}
